@@ -71,9 +71,10 @@ class Tree:
         else:
             self.genom = np.array(
                 [[random.randint(0, (self.chromosoms - 1) * 2) for _ in range(4)] for _ in range(self.chromosoms)])
-        chance = random.randint(1, 100)
+            
+        chance = random.randint(1, 100) #шанс мутации
         if chance <= 25:
-            # print('mutation')
+            
             i, j = random.randint(0, self.chromosoms - 1), random.randint(0, 3)
             self.genom[i, j] = random.randint(0, (self.chromosoms - 1) * 2)
         # self.genom = np.array(

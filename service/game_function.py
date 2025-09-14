@@ -55,7 +55,7 @@ def get_genoms(arguments):
     return genoms
 
 
-def create_trees(arguments, setting, map):
+def create_trees(arguments, setting, map) -> list:
     if arguments['genoms_folder']:  # create trees with genoms from files
         genoms = get_genoms(arguments)
 
@@ -64,8 +64,6 @@ def create_trees(arguments, setting, map):
         trees = [Tree(i * int(setting.width / setting.pixel_size / arguments['trees_count']),
                       setting.height // setting.pixel_size - 1, genoms[i], map) for i in
                  range(arguments['trees_count'])]
-
-
 
     else:
         trees = [Tree(step, setting.height // setting.pixel_size - 1, 0, map) for step in

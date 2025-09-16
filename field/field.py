@@ -1,5 +1,8 @@
 import numpy as np
 import pygame
+from service.setting import Setting
+
+setting = Setting
 
 
 class Field:
@@ -16,10 +19,11 @@ class Field:
                                     (
                                         pixel.position[0] * self.size, pixel.position[1] * self.size, self.size,
                                         self.size), 0)
-            rect = pygame.draw.rect(self.screen, pixel.border_color,
-                                    (
-                                        pixel.position[0] * self.size, pixel.position[1] * self.size, self.size,
-                                        self.size), 1)
+            if setting.frames:
+                rect = pygame.draw.rect(self.screen, pixel.border_color,
+                                        (
+                                            pixel.position[0] * self.size, pixel.position[1] * self.size, self.size,
+                                            self.size), 1)
             if pixel.number:
                 font = pygame.font.Font(None, self.size)
                 number = font.render(str(pixel.number), 1, pixel.font_color)

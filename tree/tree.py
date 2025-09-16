@@ -5,6 +5,29 @@ from tree.pixel import Pixel
 
 setting = Setting
 
+def make_color(genom) -> tuple[int, int, int]:
+    #генерация цветов по степени родства
+    red_segment = [item for row in genom[:4] for item in row]
+    green_segment = [item for row in genom[4:12] for item in row]
+    blue_segment = [item for row in genom[12:16] for item in row]
+    
+    red = (sum(red_segment) * 2) % 256
+    green = (sum(green_segment) * 3) % 256
+    blue = (sum(blue_segment) * 4) % 256
+    
+    return (red, green, blue)
+
+
+def count_age(genom, chromosomes):
+    height = setting.height
+    value = np.sum(genom[chromosomes-1])
+    max_value = (chromosomes - 1) * 2 * 4
+    coef = height // max_value
+    if value * coef // height > 1:
+        age = height
+    else:
+        age = value * coef
+    return age
 
 def get_occlusion(cell, map):
     x, y = cell.position
@@ -57,11 +80,9 @@ class Outgrowth(Pixel):
 class Tree:
     def __init__(self, start_x, start_y, genom, map):
         self.age = 0
-        self.dead_age = random.randint(88, 92)
         self.energy = 300
         self.chromosoms = 16
         self.outgrowth_color = (150, 150, 150)
-        self.wood_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         self.outgrowthes = [Outgrowth(self.outgrowth_color, (start_x, start_y), '0')]
         map[start_y, start_x] = 1
         self.woods = []
@@ -72,11 +93,15 @@ class Tree:
             self.genom = np.array(
                 [[random.randint(0, (self.chromosoms - 1) * 2) for _ in range(4)] for _ in range(self.chromosoms)])
             
+        self.wood_color = make_color(self.genom)
+        self.dead_age = count_age(self.genom, self.chromosoms)
+
         chance = random.randint(1, 100) #шанс мутации
         if chance <= 25:
             
             i, j = random.randint(0, self.chromosoms - 1), random.randint(0, 3)
             self.genom[i, j] = random.randint(0, (self.chromosoms - 1) * 2)
+
         # self.genom = np.array(
         #    [[13, 30, 14, 12],
         #     [30, 30, 30, 30],
